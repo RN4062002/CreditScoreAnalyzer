@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.creditscoreapp.data.User;
 import com.example.creditscoreapp.database.AppDatabase;
+import com.example.creditscoreapp.utils.PreferenceManager;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class Login extends AppCompatActivity {
 
     TextView txt1;
     AppDatabase db;
+    PreferenceManager preferenceManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,12 @@ public class Login extends AppCompatActivity {
         text2 = findViewById(R.id.pass);
         txt1 = findViewById(R.id.txt1);
 
+        preferenceManager = new PreferenceManager(Login.this);
+        boolean is_login =  preferenceManager.getBoolean(PreferenceManager.is_Login);
+        if(is_login){
+            Intent dashboard = new Intent(Login.this,MainActivity.class);
+            startActivity(dashboard);
+        }
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,6 +56,7 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+
     public void Test() {
         Needle.onBackgroundThread().execute(new UiRelatedTask<Boolean>() {
             @Override
@@ -68,6 +77,7 @@ public class Login extends AppCompatActivity {
                     }
 
                     if (credentialsMatch) {
+                        preferenceManager.setBoolean(PreferenceManager.is_Login, true);
                         Intent intent = new Intent(Login.this, MainActivity.class);
                         startActivity(intent);
                         Toast.makeText(getApplicationContext(), "Login successfully", Toast.LENGTH_SHORT).show();

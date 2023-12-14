@@ -10,10 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.creditscoreapp.utils.PreferenceManager;
+
 public class MainActivity extends AppCompatActivity {
     private EditText incomeEditText, expensesEditText, debtsEditText, assetsEditText;
     private TextView creditScoreResult;
-
+    Button logout;
+    PreferenceManager preferenceManager;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -25,12 +28,22 @@ public class MainActivity extends AppCompatActivity {
         debtsEditText = findViewById(R.id.debtsEditText);
         assetsEditText = findViewById(R.id.assetsEditText);
         creditScoreResult = findViewById(R.id.creditScoreResult);
+        logout = findViewById(R.id.logout);
+        preferenceManager = new PreferenceManager(this);
 
         Button calculateButton = findViewById(R.id.btn);
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 calculateCreditScore();
+            }
+        });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                preferenceManager.setBoolean( preferenceManager.is_Login, false);
+                Intent intent = new Intent(MainActivity.this, Login.class);
+                startActivity(intent);
             }
         });
     }
@@ -58,10 +71,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("creditScore", score);
         intent.putExtra("creditRating", creditRating);
         startActivity(intent);
-
-        // Display the credit score and rating to the user
-        // creditScoreResult.setText("Credit Score: " + score + "\nRating: " + creditRating);
-
     }
+
 
 }
